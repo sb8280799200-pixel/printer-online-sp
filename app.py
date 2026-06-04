@@ -33,8 +33,7 @@ from pathlib import Path
 from typing import Any
 
 BASE_DIR = Path(__file__).resolve().parent
-DEFAULT_DATA_DIR = Path(os.environ.get("PRINTER_DATA_DIR", "/tmp/printer-online-sp" if os.environ.get("VERCEL") else BASE_DIR / "data"))
-DATA_DIR = DEFAULT_DATA_DIR
+DATA_DIR = BASE_DIR / "data"
 UPLOAD_DIR = DATA_DIR / "uploads"
 DB_PATH = DATA_DIR / "printer_online.sqlite3"
 MAX_UPLOAD_BYTES = 25 * 1024 * 1024

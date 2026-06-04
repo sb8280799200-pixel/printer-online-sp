@@ -1,9 +1,4 @@
 __pycache__/
 *.py[cod]
 data/
-data-next/
-node_modules/
-.next/
-out/
-.vercel/
 .DS_Store

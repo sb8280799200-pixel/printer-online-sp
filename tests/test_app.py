@@ -57,11 +57,6 @@ class PrinterOnlineTests(unittest.TestCase):
         self.assertEqual(job["print_status"], "blocked")
         self.assertIn("blocked", job["printer_message"])
 
-    def test_vercel_handler_entrypoint_extends_app_handler(self):
-        from api.index import handler
-
-        self.assertTrue(issubclass(handler, app.App))
-
 
 if __name__ == "__main__":
     unittest.main()
