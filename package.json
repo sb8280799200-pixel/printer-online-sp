@@ -6,13 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node tests/fullstack.test.mjs"
+    "test": "node tests/fullstack.test.mjs",
+    "start:api": "node backend/server.js"
   },
   "dependencies": {
     "next": "^15.0.0",
     "qrcode": "^1.5.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.12.0",
+    "mysql2": "^3.11.0"
   },
   "devDependencies": {},
   "type": "module"
