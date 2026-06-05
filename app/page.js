@@ -47,7 +47,7 @@ export default function Home() {
         <p className="eyebrow">Full-stack Vercel print ordering app</p>
         <h1>Upload. Price. Pay. Print only after payment.</h1>
         <p>
-          Customers upload an image or PDF, select mono/colour and copy count, then pay the exact rupee amount. Admins control pricing, payment details, transaction history and printer endpoint settings.
+          Customers upload an image or PDF, select mono/colour and copy count, then pay the exact rupee amount. Admins control pricing, payment details, transaction history, local printer command, and optional printer endpoint settings.
         </p>
         {user ? (
           <div className="actions">
@@ -77,7 +77,7 @@ export default function Home() {
 
       <section className="grid">
         <article className="card"><h3>User rights</h3><ul><li>Login and upload PDF/image documents.</li><li>Select mono or colour printing.</li><li>Choose number of copies.</li><li>Pay only the calculated amount.</li></ul></article>
-        <article className="card"><h3>Admin rights</h3><ul><li>Edit mono and colour prices.</li><li>Set online payment account.</li><li>View payment and print history.</li><li>Configure a printer endpoint/agent.</li></ul></article>
+        <article className="card"><h3>Admin rights</h3><ul><li>Edit mono and colour prices.</li><li>Set online payment account.</li><li>View payment and print history.</li><li>Configure the local printer command or endpoint/agent.</li></ul></article>
       </section>
     </main>
   );
