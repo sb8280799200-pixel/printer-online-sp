@@ -21,8 +21,7 @@ export async function POST(request) {
     colorPrice: Math.max(0, Number(body.colorPrice) || 0),
     paymentAccount: String(body.paymentAccount || 'printershop@upi').trim(),
     shopName: String(body.shopName || 'Printer Online SP').trim(),
-    printerEndpoint: String(body.printerEndpoint || '').trim(),
-    printerCommand: String(body.printerCommand || '').trim()
+    printerEndpoint: String(body.printerEndpoint || '').trim()
   };
 
   await writeDb(db);

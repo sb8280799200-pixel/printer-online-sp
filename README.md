@@ -13,7 +13,7 @@ A self-contained Python web app for online print ordering.
 - Simulate payment success/failure:
   - successful payments dispatch the job to the configured/default printer or queue it safely;
   - failed payments are blocked and never printed.
-- Admin dashboard for mono/colour pricing, payment account, local printer command, optional printer endpoint, payment transaction history, and document history.
+- Admin dashboard for mono/colour pricing, payment account, optional printer command, payment transaction history, and document history.
 
 ## Run locally
 
@@ -43,7 +43,7 @@ Example:
 lp -n {copies} {file}
 ```
 
-The Next.js app also exposes **Printer endpoint / local agent URL** for a separate print agent. Printing is attempted only after a successful payment. Failed payments are blocked and never dispatched. If no admin command or endpoint is configured, the app tries the operating system default `lp`/`lpr` command. If neither exists, paid jobs are marked as queued rather than printed.
+If no command is configured, the app tries the operating system default `lp`/`lpr` command. If neither exists, paid jobs are marked as queued rather than printed.
 
 ## Notes for production
 

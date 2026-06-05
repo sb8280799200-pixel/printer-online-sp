@@ -13,10 +13,6 @@ export async function GET(request, { params }) {
     return NextResponse.json({ error: 'Job not found' }, { status: 404 });
   }
 
-  if (!job.printType || !job.copies || job.amountRupees == null) {
-    return NextResponse.json({ job, settings: db.settings, payment: null });
-  }
-
   const payload = paymentPayload(db.settings, job);
   const qrDataUrl = await makePaymentQr(payload);
   return NextResponse.json({ job, settings: db.settings, payment: { payload, qrDataUrl } });
@@ -33,14 +29,6 @@ export async function POST(request, { params }) {
 
   if (!job || (user.role !== 'admin' && job.userId !== user.id)) {
     return NextResponse.json({ error: 'Job not found' }, { status: 404 });
-  }
-
-  if (!job.printType || !job.copies || job.amountRupees == null) {
-    return NextResponse.json({ error: 'Choose print type and copies before payment' }, { status: 400 });
-  }
-
-  if (job.paymentStatus === 'success') {
-    return NextResponse.json({ error: 'This job is already paid and cannot be paid again' }, { status: 409 });
   }
 
   const success = result === 'success';

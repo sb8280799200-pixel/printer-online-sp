@@ -57,9 +57,7 @@ export default function AdminPage() {
           <label>Colour price per copy (₹)<input type="number" step="0.01" min="0" value={settings.colorPrice} onChange={(event) => setSettings({ ...settings, colorPrice: event.target.value })} /></label>
           <label>Online payment account / UPI<input value={settings.paymentAccount} onChange={(event) => setSettings({ ...settings, paymentAccount: event.target.value })} /></label>
           <label>Shop name<input value={settings.shopName} onChange={(event) => setSettings({ ...settings, shopName: event.target.value })} /></label>
-          <label>Printer command on admin system<input placeholder="lp -n {copies} {file}" value={settings.printerCommand || ''} onChange={(event) => setSettings({ ...settings, printerCommand: event.target.value })} /></label>
-          <label>Printer endpoint / local agent URL<input placeholder="https://your-print-agent.example/print" value={settings.printerEndpoint || ''} onChange={(event) => setSettings({ ...settings, printerEndpoint: event.target.value })} /></label>
-          <p className="hint form-note">Use placeholders <code>{'{file}'}</code>, <code>{'{copies}'}</code>, and <code>{'{type}'}</code>. Successful payments print automatically; failed payments stay blocked.</p>
+          <label>Printer endpoint / local agent URL<input placeholder="https://your-print-agent.example/print" value={settings.printerEndpoint} onChange={(event) => setSettings({ ...settings, printerEndpoint: event.target.value })} /></label>
           <button className="button" type="submit">Save settings</button>
         </form>
         {message && <p className="hint">{message}</p>}

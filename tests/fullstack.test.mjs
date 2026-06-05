@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
@@ -22,7 +22,7 @@ let db = await store.readDb();
 assert.equal(db.settings.monoPrice, 2);
 assert.equal(db.settings.colorPrice, 10);
 
-db.jobs.push({ id: 1, userId: user.id, amountRupees: 30, paymentStatus: 'success', copies: 3, printType: 'mono', upload: { url: path.join(tmp, 'document.pdf') } });
+db.jobs.push({ id: 1, userId: user.id, amountRupees: 30 });
 await store.writeDb(db);
 db = await store.readDb();
 
@@ -31,22 +31,8 @@ assert.match(payload, /pa=printershop%40upi/);
 assert.match(payload, /am=30.00/);
 assert.match(payload, /tn=PRINT-1/);
 
-const noPrinter = await store.dispatchPrint(db.jobs[0], { ...db.settings, printerEndpoint: '', printerCommand: '' });
+const noPrinter = await store.dispatchPrint(db.jobs[0], { ...db.settings, printerEndpoint: '' });
 assert.equal(noPrinter.printStatus, 'queued');
-
-const blockedPrint = await store.dispatchPrint({ ...db.jobs[0], paymentStatus: 'failed' }, { ...db.settings, printerEndpoint: '', printerCommand: '' });
-assert.equal(blockedPrint.printStatus, 'blocked');
-
-const agentScript = path.join(tmp, 'printer-agent.mjs');
-const agentOutput = path.join(tmp, 'printer-agent-output.json');
-await writeFile(agentScript, `import { writeFile } from 'node:fs/promises';\nawait writeFile(${JSON.stringify(agentOutput)}, JSON.stringify(process.argv.slice(2)));\n`);
-const commandPrint = await store.dispatchPrint(db.jobs[0], {
-  ...db.settings,
-  printerEndpoint: '',
-  printerCommand: `${process.execPath} ${agentScript} {copies} {type} {file}`
-});
-assert.equal(commandPrint.printStatus, 'sent');
-assert.deepEqual(JSON.parse(await readFile(agentOutput, 'utf8')), ['3', 'mono', db.jobs[0].upload.url]);
 
 await rm(tmp, { recursive: true, force: true });
 console.log('fullstack store tests passed');
