@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { dispatchPrint, makePaymentQr, paymentPayload, readDb, requireUser, writeDb } from '@/lib/store';
+import { dispatchPrint, isFinalPaymentStatus, makePaymentQr, paymentPayload, readDb, requireUser, writeDb } from '@/lib/store';
 
 export async function GET(request, { params }) {
   const user = requireUser(request);
@@ -11,6 +11,10 @@ export async function GET(request, { params }) {
 
   if (!job || (user.role !== 'admin' && job.userId !== user.id)) {
     return NextResponse.json({ error: 'Job not found' }, { status: 404 });
+  }
+
+  if (!job.printType || !job.copies || job.amountRupees == null) {
+    return NextResponse.json({ job, settings: db.settings, payment: null });
   }
 
   const payload = paymentPayload(db.settings, job);
@@ -29,6 +33,14 @@ export async function POST(request, { params }) {
 
   if (!job || (user.role !== 'admin' && job.userId !== user.id)) {
     return NextResponse.json({ error: 'Job not found' }, { status: 404 });
+  }
+
+  if (!job.printType || !job.copies || job.amountRupees == null) {
+    return NextResponse.json({ error: 'Choose print type and copies before payment' }, { status: 400 });
+  }
+
+  if (isFinalPaymentStatus(job.paymentStatus)) {
+    return NextResponse.json({ error: 'This payment is already final. Upload a new document to create another print request.' }, { status: 409 });
   }
 
   const success = result === 'success';

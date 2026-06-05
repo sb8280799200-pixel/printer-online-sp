@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 
 function token() { return localStorage.getItem('printer-token'); }
 function money(value) { return `₹${Number(value || 0).toFixed(2)}`; }
+function paymentFinal(status) { return status === 'success' || status === 'failed'; }
 
 export default function JobPage() {
   const { id } = useParams();
@@ -24,6 +25,7 @@ export default function JobPage() {
       setJob(data.job);
       setSettings(data.settings);
       setPayment(data.payment);
+      setMessage('');
     } else {
       setMessage(data.error || 'Unable to load job');
     }
@@ -41,6 +43,7 @@ export default function JobPage() {
     const data = await response.json();
     if (response.ok) {
       setJob(data.job);
+      setMessage('');
       await loadPayment();
     } else setMessage(data.error || 'Could not save options');
   }
@@ -52,7 +55,10 @@ export default function JobPage() {
       body: JSON.stringify({ result })
     });
     const data = await response.json();
-    if (response.ok) setJob(data.job); else setMessage(data.error || 'Payment update failed');
+    if (response.ok) {
+      setJob(data.job);
+      setMessage('');
+    } else setMessage(data.error || 'Payment update failed');
   }
 
   if (!job) return <main className="shell"><p className="hint">Loading...</p>{message && <p className="error">{message}</p>}</main>;
@@ -63,6 +69,7 @@ export default function JobPage() {
       <section className="card">
         <h1>Print job #{job.id}</h1>
         <p><strong>Document:</strong> {job.originalFilename}</p>
+        {message && <p className="error">{message}</p>}
         <form className="options" onSubmit={saveOptions}>
           <label>Printing type
             <select value={options.printType} onChange={(event) => setOptions({ ...options, printType: event.target.value })}>
@@ -84,10 +91,14 @@ export default function JobPage() {
             <p>{job.printType} × {job.copies} copies × {money(job.unitPriceRupees)}</p>
             <p><strong>Payment account:</strong> {settings.paymentAccount}</p>
             <p className="payload">{payment.payload}</p>
-            <div className="actions">
-              <button className="button" onClick={() => pay('success')}>Simulate payment success</button>
-              <button className="button danger" onClick={() => pay('fail')}>Simulate payment fail</button>
-            </div>
+            {paymentFinal(job.paymentStatus) ? (
+              <p className="hint">Payment is final. Upload a new document to create another print request.</p>
+            ) : (
+              <div className="actions">
+                <button className="button" onClick={() => pay('success')}>Simulate payment success</button>
+                <button className="button danger" onClick={() => pay('fail')}>Simulate payment fail</button>
+              </div>
+            )}
           </div>
           <img className="qr" src={payment.qrDataUrl} alt={`Payment QR for ${money(job.amountRupees)}`} />
           <p><strong>Payment status:</strong> <span className={`status ${job.paymentStatus}`}>{job.paymentStatus}</span></p>

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { readDb, requireUser, writeDb } from '@/lib/store';
+import { isFinalPaymentStatus, readDb, requireUser, writeDb } from '@/lib/store';
 
 export async function POST(request, { params }) {
   const user = requireUser(request);
@@ -12,6 +12,10 @@ export async function POST(request, { params }) {
 
   if (!job || (user.role !== 'admin' && job.userId !== user.id)) {
     return NextResponse.json({ error: 'Job not found' }, { status: 404 });
+  }
+
+  if (isFinalPaymentStatus(job.paymentStatus)) {
+    return NextResponse.json({ error: 'Paid or failed jobs are final. Upload a new document to create another print request.' }, { status: 409 });
   }
 
   const normalizedType = printType === 'color' ? 'color' : 'mono';
