@@ -2,3 +2,8 @@ __pycache__/
 *.py[cod]
 data/
 .DS_Store
+
+node_modules/
+.next/
+data-next/
+package-lock.json
